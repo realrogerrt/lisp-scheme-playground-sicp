@@ -67,12 +67,7 @@
 (for-each (lambda (x) (newline) (display x)) (list 123 4325 34324))
 
 (define (uniques l)
-	(define (unique-impl l r last)
-		;(newline )
-		;(display l)
-		;(newline )
-		;(display r)
-		;(newline )
+	(define (unique-impl l r)
 		(cond
 			((= (length l) 0) r)
 			(else (if (= (car r) (car l))
