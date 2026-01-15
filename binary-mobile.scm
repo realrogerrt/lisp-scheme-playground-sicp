@@ -1,3 +1,4 @@
+;;2.29
 (define (make-mobile left right)
   (cons left right)
   )
@@ -91,6 +92,7 @@
 (define (tree-children node) (cdr node))
 (define tree (list 1 (list 2 (list 3 5 6) 4)))
 
+;;2.30
 (define (square-tree node)
   (map (lambda (x) (* x x)) node)
   )
@@ -100,10 +102,12 @@
 (define tree-map map)
 (define square (lambda (x) (* x x)))
 
+;;2.31
 (define (square-tree-hop tree) (tree-map square tree))
 
 (square-tree-hop tree)
 
+;;2.32
 (define (subsets s)
   (if (null? s)
     (list '())

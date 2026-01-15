@@ -19,6 +19,7 @@
 (cons 1 (list 2 3))
 (cons (list 2 3) 1)
 
+;;2.18
 (define (reverse-list l)
   ;(define (iter left right)
   ;	(if (null? left)
@@ -35,6 +36,7 @@
 
 (display (reverse-list (list 1 2 3 4)))
 
+;;2.20
 (define (same-parity . els)
   (define (iter first remaining result)
     (if (null? remaining)
@@ -54,6 +56,7 @@
 (same-parity 1 2 3 4 5)
 (same-parity 2 3 4 5 6)
 
+;;2.23
 (define (for-each proc l)
   (if (null?  l)
     #f
@@ -85,6 +88,7 @@
 (uniques (list 1 2 2 3 3 3))
 
 
+;;2.28
 (define (fringe l)
   (if (pair? l)
     (if (null? (cdr l))

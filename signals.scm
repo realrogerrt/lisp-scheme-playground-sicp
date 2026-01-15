@@ -10,6 +10,7 @@
 (/ (* (+ 5 1) 5) 2)
 
 
+;;2.33 a
 (define (map-using-accumulate p sequence)
   (accumulate (lambda (x y) (cons (p x) y)) () sequence))
 
@@ -18,16 +19,19 @@
 (map-using-accumulate (lambda (x) (* x 2)) (list 1 2 3))
 
 
+;;2.33 b
 (define (append seq1 seq2)
   (accumulate cons seq2 seq1))
 
 (append (list 1 2 3) (list 4 5 6))
 
+;;2.33 c
 (define (length seq)
   (accumulate (lambda (x y) (+ y 1)) 0 seq))
 
 (length (list 1 2 3 4 442 234 423 423 423))
 
+;;2.34
 (define (horner-val x cs)
   (accumulate (lambda (a b) (+ (* b x) a))
               0
@@ -43,6 +47,7 @@
 	  (map proc (cdr items)))))
 
 
+;;2.35
 (define (leaves-mapper it)
   (cond ((null? it) 0)
 	((pair? it) (count-leaves it))
