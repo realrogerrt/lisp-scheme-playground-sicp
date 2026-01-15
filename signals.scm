@@ -7,15 +7,15 @@
 
 
 (accumulate (lambda (x y) (+ x y)) 0 (list 1 2 3 4 5))
-
 (/ (* (+ 5 1) 5) 2)
 
 
-(define (map p sequence)
+(define (map-using-accumulate p sequence)
   (accumulate (lambda (x y) (cons (p x) y)) () sequence))
 
 
 (map (lambda (x) (* x 2)) (list 1 2 3))
+(map-using-accumulate (lambda (x) (* x 2)) (list 1 2 3))
 
 
 (define (append seq1 seq2)
@@ -34,3 +34,24 @@
               cs))
 
 (horner-val 2 (list 1 2 3 4))
+(horner-val 2 (list 1 3 0 5 0 1))
+
+(define (map proc items)
+  (if (null? items)
+    items
+    (cons (proc (car items))
+	  (map proc (cdr items)))))
+
+
+(define (leaves-mapper it)
+  (cond ((null? it) 0)
+	((pair? it) (count-leaves it))
+	(else 1))
+)
+
+(define (count-leaves t)
+	(accumulate + 0 (map leaves-mapper t)))
+
+(define tree (list (list 1 2 3) (list (list 4 5) (list 6 7)) 8))
+
+(count-leaves tree)
