@@ -16,6 +16,7 @@
 )
 
 
+;;2.1
 (define (make-rat n d) 
 	(let ((m (* n d)))
 		(if (> m 0)

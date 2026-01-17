@@ -60,3 +60,69 @@
 (define tree (list (list 1 2 3) (list (list 4 5) (list 6 7)) 8))
 
 (count-leaves tree)
+
+;;2.36
+;(define (first-elem-list seqs)
+;  (accumulate (lambda (a b) (cons (car a) b)) (list ) seqs))
+(define (first-elem-list seqs)
+  (accumulate (lambda (a b)
+		(if (null? a)
+		  (list )
+		  (cons (car a) b)))
+	(list )
+	seqs))
+(define (remind-elem-list seqs)
+  (accumulate (lambda (a b)
+		(cond ((null? a) (list ))
+		      ((null? (cdr a)) (list ))
+		      (else (cons (cdr a) b))))
+	(list )
+	seqs))
+
+(define (accumulate-n op init seqs)
+  (if (null? seqs)
+    (list )
+    (cons (accumulate op init (first-elem-list seqs))
+	  (accumulate-n op init (remind-elem-list seqs)))))
+
+(first-elem-list (list (list 1 2 3) (list 4 5 6)))
+(remind-elem-list (list (list 1 2 3) (list 4 5 6)))
+
+(accumulate-n + 0 (list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12)))
+(accumulate-n + 0 (list (list 1) (list 4) (list 7)))
+(accumulate-n + 0 (remind-elem-list (list (list 1) (list 4) (list 7))))
+
+;;2.37
+(define (matrix-mapper r v)
+  (if (null? r)
+    0
+    (+ (* (car r) (car v)) (matrix-mapper (cdr r) (cdr v)))
+))
+
+(matrix-mapper (list 1 2 3) (list 1 2 3))
+
+(define (matrix-*-vector m v)
+  (map (lambda (r) (matrix-mapper r v)) m))
+
+(matrix-*-vector (list (list 1 2 3) (list 4 5 6)) (list 1 2 3))
+
+(define (transpose m) (accumulate-n cons (list ) m))
+
+(transpose (list (list 1 2 3) (list 4 5 6)))
+
+(define (builder a b)
+  (newline)
+  (display "a:")
+  (display a)
+  (newline)
+  (display "b:")
+  (display b)
+  (if (pair? b)
+    (cons a b)
+    (cons a (list b))))
+
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map (lambda (r) (map (lambda (c) (matrix-mapper r c)) cols)) m)))
+
+(matrix-*-matrix (list (list 1 2 3) (list 4 5 6)) (list (list 1 2) (list 3 4) (list 5 6)))
