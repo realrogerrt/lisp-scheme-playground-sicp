@@ -126,3 +126,33 @@
     (map (lambda (r) (map (lambda (c) (matrix-mapper r c)) cols)) m)))
 
 (matrix-*-matrix (list (list 1 2 3) (list 4 5 6)) (list (list 1 2) (list 3 4) (list 5 6)))
+
+;;2.38
+(define fold-right accumulate)
+
+(define (fold-left op initial sequence)
+  (define (iter value sequence)
+    (if (null? sequence)
+      value
+      (iter (op value (car sequence)) (cdr sequence))))
+  (iter initial sequence))
+
+(fold-right + 0 (list 1 2 3 4))
+(fold-left + 0 (list 1 2 3 4))
+
+(fold-right / 1 (list 1 2 3))
+(fold-left / 1 (list 1 2 3))
+
+(fold-right list (list ) (list 1 2 3))
+(fold-left list (list ) (list 1 2 3))
+
+;;2.39
+(define (reverse-right s)
+  (fold-right (lambda (x y) (append y (list x))) (list ) s))
+
+(reverse-right (list 1 2 3))
+
+(define (reverse-left s)
+  (fold-left (lambda (x y) (cons y x)) (list ) s))
+
+(reverse-left (list 1 2 3))
