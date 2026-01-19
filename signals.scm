@@ -157,16 +157,42 @@
 
 (reverse-left (list 1 2 3))
 
-(define a (list 1 2 3))
-(define b (list 4 5 3))
-(map (lambda (x) (map (lambda (y) (list x y)) b)) a)
-
+;;2.40
 (define (enumerate a b)
+  (cond ((> a b) (list ))
+        ((= a b) (list b))
+        (else (cons a (enumerate (+ a 1) b)))))
   (if (= a b)
     (list b)
     (cons a (enumerate (+ a 1) b))))
 
 (define (flat-map proc seqs)
-  (accumulate append (list ) (map proc seqs)))
+  (flat (map proc seqs)))
 
-(flat-map (lambda (x) (map (lambda (y) (list x y)) (enumerate 1 x))) (enumerate 1 3))
+(define (flat seqs)
+  (accumulate append (list ) seqs))
+
+
+(define (unique-pairs n)
+  (flat-map (lambda (x) (map (lambda (y) (list x y)) (enumerate 1 (- x 1)))) (enumerate 1 n)))
+
+(unique-pairs 5)
+
+(define (prime? n)
+  (define (iter c s)
+    (if (> c s)
+      #t
+      (and (> (modulo n c) 0) (iter (+ c 1) s))))
+  (iter 2 (sqrt n)))
+
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+
+(define (make-pair-sum pair)
+  (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+
+
+(define (prime-sum-pairs n)
+  (map make-pair-sum (filter prime-sum? (unique-pairs n))))
+
+(prime-sum-pairs 6)
