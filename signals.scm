@@ -111,12 +111,6 @@
 (transpose (list (list 1 2 3) (list 4 5 6)))
 
 (define (builder a b)
-  (newline)
-  (display "a:")
-  (display a)
-  (newline)
-  (display "b:")
-  (display b)
   (if (pair? b)
     (cons a b)
     (cons a (list b))))
@@ -162,9 +156,6 @@
   (cond ((> a b) (list ))
         ((= a b) (list b))
         (else (cons a (enumerate (+ a 1) b)))))
-  (if (= a b)
-    (list b)
-    (cons a (enumerate (+ a 1) b))))
 
 (define (flat-map proc seqs)
   (flat (map proc seqs)))
@@ -196,3 +187,18 @@
   (map make-pair-sum (filter prime-sum? (unique-pairs n))))
 
 (prime-sum-pairs 6)
+
+;;2.41
+(define (unique-triplets n)
+  (flat (flat-map (lambda (x) (map (lambda (y) (map (lambda (z) (list x y z)) (enumerate 1 (- y 1)))) (enumerate 1 (- x 1)))) (enumerate 1 n))))
+
+
+(define (triplets n s)
+  (define (sum-equal-to? trip)
+    (= s (accumulate + 0 trip)))
+  (filter sum-equal-to? (unique-triplets n)))
+
+(define n 5)
+(unique-triplets n)
+(map (lambda (x) (accumulate + 0 x)) (unique-triplets n))
+(triplets n 10)
