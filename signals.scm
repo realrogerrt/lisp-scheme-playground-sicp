@@ -156,3 +156,17 @@
   (fold-left (lambda (x y) (cons y x)) (list ) s))
 
 (reverse-left (list 1 2 3))
+
+(define a (list 1 2 3))
+(define b (list 4 5 3))
+(map (lambda (x) (map (lambda (y) (list x y)) b)) a)
+
+(define (enumerate a b)
+  (if (= a b)
+    (list b)
+    (cons a (enumerate (+ a 1) b))))
+
+(define (flat-map proc seqs)
+  (accumulate append (list ) (map proc seqs)))
+
+(flat-map (lambda (x) (map (lambda (y) (list x y)) (enumerate 1 x))) (enumerate 1 3))
