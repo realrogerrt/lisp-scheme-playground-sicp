@@ -202,3 +202,88 @@
 (unique-triplets n)
 (map (lambda (x) (accumulate + 0 x)) (unique-triplets n))
 (triplets n 10)
+
+
+;;2.42
+(define (no-queen-horizontally k positions)
+  (define x (- k 1))
+  (define y (- (list-ref positions x) 1))
+  (define (impl i poss)
+    (if (= i x)
+      #t
+      (and (not (= y (- (car poss) 1))) (impl (+ i 1) (cdr poss)))))
+  (impl 0 positions))
+
+(define (no-queen-diagonal-up k positions)
+  (define x (- k 1))
+  (define y (- (list-ref positions x) 1))
+  (define l (- x y))
+  (define (impl i o poss)
+    (cond ((= i x) #t)
+	  ((< i l) (impl (+ i 1) o (cdr poss)))
+	  (else (and (not (= y (+ o (car poss)))) (impl (+ i 1) (- o 1) (cdr poss))))))
+  (impl 0  (- y 1) positions))
+
+(define (no-queen-diagonal-down k positions)
+  (define x (- k 1))
+  (define y (- (list-ref positions x) 1))
+  (define l (+ x y -8))
+  (define (impl i o poss)
+    (cond ((= i x) #t)
+          ((< i l) (impl (+ i 1) o (cdr poss)))
+	  (else (and (not (= y (- (car poss) o))) (impl (+ i 1) (- o 1) (cdr poss))))))
+  (impl 0 (+ 1 x) positions))
+
+  
+(define (safe? k positions)
+  (and
+    (no-queen-horizontally k positions)
+    (no-queen-diagonal-up k positions)
+    (no-queen-diagonal-down k positions)))
+
+(define (safe2? k positions) #t)
+
+(define (adjoin-position new-row k rest)
+  (define j (- k 1))
+  (define (impl i s r)
+    (if (= i j)
+      (append (append s (list new-row)) (cdr r))
+      (impl (+ i 1) (append s (list (car r))) (cdr r))))
+  (impl 0 (list ) rest))
+
+(define empty-board (list 0 0 0 0 0 0 0 0))
+
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+      (list (list 0 0 0 0 0 0 0 0))
+      (filter
+	(lambda (positions) (safe? k positions))
+	(flat-map
+	  (lambda (rest-of-queens); result recursive call with k-1
+	    (map (lambda (new-row) ;1-8
+		   (adjoin-position
+		     new-row k rest-of-queens))
+		 (enumerate 1 board-size)))
+	  (queen-cols (- k 1))))))
+  (queen-cols board-size))
+
+
+;#f
+(no-queen-horizontally 3 (list 2 1 2))
+;#t
+(no-queen-horizontally 3 (list 1 2 3))
+;#f
+(no-queen-horizontally 2 (list 3 3 1))
+
+;#f
+(no-queen-diagonal-up 3 (list 1 1 3))
+;#t
+(no-queen-diagonal-up 3 (list 2 1 3))
+
+;#f
+(no-queen-diagonal-down 3 (list 3 1 1))
+;#t
+(no-queen-diagonal-down 3 (list 2 1 1))
+
+(queens 8)
