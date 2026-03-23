@@ -6,13 +6,24 @@
   (string "(below " a " " b ")")
 )
 
-(define (right-split painter n)
+;2.45
+(define (split a b)
+  (lambda (painter n)
+	(if (= n 0)
+	    painter
+	    (let ((smaller (right-split painter (- n 1))))
+	      (a painter (b smaller smaller))))))
+
+(define right-split (split beside below))
+(define up-split (split below beside))
+
+(define (right-split0 painter n)
   (if (= n 0)
     painter
     (let ((smaller (right-split painter (- n 1))))
       (beside painter (below smaller smaller)))))
 
-(define (up-split painter n)
+(define (up-split0 painter n)
   (if (= n 0)
     painter
     (let ((smaller (up-split painter (- n 1))))
@@ -29,4 +40,4 @@
 	(beside (below painter top-left)
 		(below bottom-right corner))))))
 
-(display (corner-split 1 10))
+(corner-split 1 3)
