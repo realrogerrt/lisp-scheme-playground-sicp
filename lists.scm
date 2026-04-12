@@ -34,7 +34,7 @@
     )
   )
 
-(display (reverse-list (list 1 2 3 4)))
+;(display (reverse-list (list 1 2 3 4)))
 
 ;;2.20
 (define (same-parity . els)
@@ -67,7 +67,7 @@
     )
   )
 
-(for-each (lambda (x) (newline) (display x)) (list 123 4325 34324))
+;(for-each (lambda (x) (newline) (display x)) (list 123 4325 34324))
 
 (define (uniques l)
   (define (unique-impl l r)
@@ -83,9 +83,7 @@
   (unique-impl (cdr l) (list (car l)))
   )
 
-(display "uniques:")
-(newline )
-(uniques (list 1 2 2 3 3 3))
+;(uniques (list 1 2 2 3 3 3))
 
 
 ;;2.28

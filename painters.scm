@@ -77,5 +77,29 @@
       (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
 		(scale-vect (ycor-vect v) (edge2-frame frame))))))
 
-(define a-frame (make-frame (make-vect 1 2) (make-vect 3 4) (make-vect 5 6)))
-((frame-coord-map a-frame) (make-vect 0 0))
+(define a-frame (make-frame (make-vect 2 2) (make-vect 1 2) (make-vect 3 0)))
+((frame-coord-map a-frame) (make-vect 1 1))
+
+;;2.48
+(define (make-segment v1 v2) (cons v1 v2))
+(define (start-segment s) (car s))
+(define (end-segment s) (cdr s))
+(define (draw-line a b)
+  (newline )
+  (display (string "drawing line from" a " to " b)))
+
+(include "lists.scm")
+
+(define (segments->painter segments-list)
+  (lambda (frame)
+    (for-each
+      (lambda (segment)
+        (draw-line
+          ((frame-coord-map frame) (start-segment segment))
+          ((frame-coord-map frame) (end-segment segment))))
+      segments-list)))
+
+((segments->painter (list
+                      (make-segment (make-vect 0 0) (make-vect 0.5 0.5))
+                      (make-segment (make-vect 0.5 0.5) (make-vect 1 1))))
+ a-frame)
