@@ -77,7 +77,8 @@
       (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
 		(scale-vect (ycor-vect v) (edge2-frame frame))))))
 
-(define a-frame (make-frame (make-vect 2 2) (make-vect 1 2) (make-vect 3 0)))
+(define a-frame (make-frame (make-vect 2 2) (make-vect 3 0) (make-vect 1 2)))
+(define b-frame (make-frame (make-vect 2 2) (make-vect 1 0) (make-vect 0 1)))
 ((frame-coord-map a-frame) (make-vect 1 1))
 
 ;;2.48
@@ -103,3 +104,32 @@
                       (make-segment (make-vect 0 0) (make-vect 0.5 0.5))
                       (make-segment (make-vect 0.5 0.5) (make-vect 1 1))))
  a-frame)
+
+((segments->painter (list
+                      (make-segment (make-vect 0 0) (make-vect 0.5 0.5))
+                      (make-segment (make-vect 0.5 0.5) (make-vect 1 1))))
+ a-frame)
+
+;;2.49
+;;a
+(define outline (list
+                    (make-segment (make-vect 0 0) (make-vect 1 0))
+                    (make-segment (make-vect 1 0) (make-vect 1 1))
+                    (make-segment (make-vect 1 1) (make-vect 0 1))
+                    (make-segment (make-vect 0 1) (make-vect 0 0))))
+
+;;b
+(define cross (list
+                    (make-segment (make-vect 0 0) (make-vect 1 1))
+                    (make-segment (make-vect 0 1) (make-vect 1 0))))
+
+;;c
+(define diamond (list
+                    (make-segment (make-vect 0.5 0) (make-vect 1 0.5))
+                    (make-segment (make-vect 1 0.5) (make-vect 0.5 1))
+                    (make-segment (make-vect 0.5 1) (make-vect 0 0.5))
+                    (make-segment (make-vect 0 0.5) (make-vect 0.5 0))))
+
+((segments->painter outline) a-frame)
+((segments->painter cross) a-frame)
+((segments->painter diamond) a-frame)
