@@ -1,35 +1,62 @@
 ;2.44
-(define (beside a b) 
-  (string "(beside " a " " b ")")
-  ;(lambda () (beside a b))
-)
-(define (below a b)
-  (string "(below " a " " b ")")
-  ;(lambda () (below a b))
-)
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter (make-frame
+                   new-origin
+                   (sub-vect (m corner1) new-origin)
+                   (sub-vect (m corner2) new-origin)))))))
+
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left
+            (transform-painter
+              painter1
+              (make-vect 0.0 0.0)
+              split-point
+              (make-vect 0.0 1.0)))
+          (paint-right
+            (transform-painter
+              painter2
+              split-point
+              (make-vect 1.0 0.0)
+              (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (paint-left frame)
+        (paint-right frame)))))
+
+(define (below painter1 painter2)
+  (let ((split-point (make-vect 0.0 0.5)))
+    (let ((paint-top
+            (transform-painter
+              painter1
+              split-point
+              (make-vect 1.0 0.5)
+              (make-vect 0.0 1.0)))
+          (paint-bottom
+            (transform-painter
+              painter2
+              (make-vect 0.0 0.0)
+              (make-vect 1.0 0.0)
+              split-point)))
+      (lambda (frame)
+        (paint-top frame)
+        (paint-bottom frame)))))
+
 
 ;2.45
 (define (split a b)
-  (lambda (painter n)
-	(if (= n 0)
-	    painter
-	    (let ((smaller (right-split painter (- n 1))))
-	      (a painter (b smaller smaller))))))
+  (define (split-impl painter n)
+    (if (= n 0)
+      painter
+      (let ((smaller (split-impl painter (- n 1))))
+        (a painter (b smaller smaller)))))
+  split-impl)
 
 (define right-split (split beside below))
 (define up-split (split below beside))
 
-(define (right-split0 painter n)
-  (if (= n 0)
-    painter
-    (let ((smaller (right-split painter (- n 1))))
-      (beside painter (below smaller smaller)))))
-
-(define (up-split0 painter n)
-  (if (= n 0)
-    painter
-    (let ((smaller (up-split painter (- n 1))))
-      (below painter (beside smaller smaller)))))
 
 (define (corner-split painter n)
   (if (= n 0)
@@ -42,8 +69,6 @@
 	(beside (below painter top-left)
 		(below bottom-right corner))))))
 
-;(corner-split 1 3)
-;(beside 1 2)
 
 ;;2.46
 
@@ -77,17 +102,37 @@
       (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
 		(scale-vect (ycor-vect v) (edge2-frame frame))))))
 
-(define a-frame (make-frame (make-vect 2 2) (make-vect 3 0) (make-vect 1 2)))
+(define a-frame (make-frame (make-vect 2 2) (make-vect 300 0) (make-vect 100 200)))
 (define b-frame (make-frame (make-vect 2 2) (make-vect 1 0) (make-vect 0 1)))
+(define c-frame (make-frame (make-vect 2 2) (make-vect 300 0) (make-vect 100 200)))
 ((frame-coord-map a-frame) (make-vect 1 1))
 
 ;;2.48
 (define (make-segment v1 v2) (cons v1 v2))
 (define (start-segment s) (car s))
 (define (end-segment s) (cdr s))
+
+;Attempt at drawing in the terminal
+; (define (make-geo-vect a b)
+;   (let ((xa (xcor-vect a))
+;         (xb (xcor-vect b))
+;         (ya (ycor-vect a))
+;         (yb (ycor-vect b)))
+;     22))
+;     (if (= xa xb)
+;        (list a b "naf" "naf"))
+;         (let ((m (/ (- ya yb) (- xa xb))))
+;
+;        (list a b ))))
+
+
+
+;; to be used in an html canvas context
 (define (draw-line a b)
   (newline )
-  (display (string "drawing line from" a " to " b)))
+  (display (string "ctx.moveTo(" (xcor-vect a) ", " (ycor-vect a) ");"))
+  (newline )
+  (display (string "ctx.lineTo(" (xcor-vect b) ", " (ycor-vect b) ");")))
 
 (include "lists.scm")
 
@@ -133,3 +178,7 @@
 ((segments->painter outline) a-frame)
 ((segments->painter cross) a-frame)
 ((segments->painter diamond) a-frame)
+
+
+
+((corner-split (segments->painter outline) 3) a-frame)
